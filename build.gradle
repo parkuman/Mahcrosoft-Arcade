@@ -1,0 +1,56 @@
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'java-library-distribution'
+
+
+mainClassName = 'mainMenu/arcadeMain'
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+version = '1.0'
+
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath 'edu.sc.seis.gradle:launch4j:2.4.3'
+  }
+}
+
+repositories {
+    mavenCentral()
+	flatDir {
+	dirs 'libs'
+	}
+}
+
+
+apply plugin: 'edu.sc.seis.launch4j'
+
+launch4j {
+  outfile = 'Mahcrosoft Arcade 1.2.8.exe'
+  mainClassName = 'mainMenu/arcadeMain'
+  icon = "${projectDir}/icons/MahIcon.ico"
+}
+
+dependencies {
+    compile 'com.google.api-client:google-api-client:1.23.0'
+    compile 'com.google.oauth-client:google-oauth-client-jetty:1.23.0'
+    compile 'com.google.apis:google-api-services-sheets:v4-rev492-1.23.0'
+    compile name: 'jl1.0.1'
+    compile 'org.apache.commons:commons-lang3:3.3.2'
+}
+
+// Task "distZip" added by plugin "java-library-distribution":
+distZip.shouldRunAfter(build)
+
+jar {
+    
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
+    
+    manifest {
+        attributes 'Main-Class': 'mainMenu.arcadeMain',
+                   'Class-Path': configurations.runtime.files.collect { "lib/$it.name" }.join(' ')
+    }
+}
+
